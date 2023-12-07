@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Whack-A-Mole</title>
+  <style>
+    .game-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .hole {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      border: 1px solid #000;
+      overflow: hidden;
+    }
+    .mole {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: #bfa05a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Whack-A-Mole Game</h1>
+  <p>Score: <span id="score">0</span></p>
+
+  <div class="game-container">
+    <div class="hole" onclick="whackMole(this)">
+      <div class="mole"></div>
+    </div>
+    <div class="hole" onclick="whackMole(this)">
+      <div class="mole"></div>
+    </div>
+    <div class="hole" onclick="whackMole(this)">
+      <div class="mole"></div>
+    </div>
+    <!-- Add more holes as needed -->
+  </div>
+
+  <script>
+    let score = 0;
+
+    function whackMole(hole) {
+      if (!hole.classList.contains('whacked')) {
+        score++;
+        document.getElementById('score').textContent = score;
+        hole.classList.add('whacked');
+        setTimeout(() => {
+          hole.classList.remove('whacked');
+        }, 1000);
+      }
+    }
+
+    function randomHole() {
+      const holes = document.querySelectorAll('.hole');
+      const index = Math.floor(Math.random() * holes.length);
+      return holes[index];
+    }
+
+    function popUpMole() {
+      const hole = randomHole();
+      const mole = hole.querySelector('.mole');
+      mole.style.display = 'flex';
+      setTimeout(() => {
+        mole.style.display = 'none';
+        if (score < 10) {
+          popUpMole();
+        }
+      }, 1000);
+    }
+
+    function startGame() {
+      score = 0;
+      document.getElementById('score').textContent = score;
+      popUpMole();
+    }
+
+    // Start the game when the page is loaded
+    startGame();
+  </script>
+
+</body>
+</html>
